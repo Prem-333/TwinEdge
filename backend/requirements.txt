@@ -6,7 +6,8 @@ influxdb-client
 pandas
 numpy
 scikit-learn
-torch
+tensorflow
+tf2onnx
 python-multipart
 requests
 

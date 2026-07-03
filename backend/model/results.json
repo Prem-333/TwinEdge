@@ -1,0 +1,6 @@
+{
+    "test_rmse": 16.683197021484375,
+    "mean_cpu_latency_ms": 0.07763569999951869,
+    "model_name": "twinedge_rul_cnn",
+    "dataset": "FD001"
+}
