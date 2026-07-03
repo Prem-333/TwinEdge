@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.eslintcache
+
+# Project Data & Models (keep artifacts but ignore raw datasets)
+backend/data/raw/
+backend/data/processed/
+backend/db.sqlite3
+backend/app/db.sqlite3
+*.db
+*.sqlite
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+.gemini/

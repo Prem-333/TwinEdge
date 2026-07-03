@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+onnxruntime
+paho-mqtt
+influxdb-client
+pandas
+numpy
+scikit-learn
+torch
+python-multipart
+requests
+
