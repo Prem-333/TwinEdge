@@ -50,8 +50,13 @@ def load_pipeline_artifacts(processed_dir: str):
     return metadata, scaler
 
 
-def call_predict(api_url: str, window: np.ndarray) -> dict:
-    resp = requests.post(f"{api_url}/predict", json={"window": window.tolist()}, timeout=5)
+def call_predict(api_url: str, window: np.ndarray, engine_id: int = 1, cycle: int = 1) -> dict:
+    payload = {
+        "engine_id": engine_id,
+        "cycle": cycle,
+        "window": window.tolist()
+    }
+    resp = requests.post(f"{api_url}/predict", json=payload, timeout=5)
     resp.raise_for_status()
     return resp.json()
 
@@ -107,13 +112,11 @@ def run_trajectory(args, metadata, scaler, train_df):
     for end in range(window, len(values) + 1):
         cycle_num = end - (len(values) - max_cycle)
         w = values[end - window:end]
-        w_scaled = scaler.transform(w)
-
         true_rul = max(0, min(125, max_cycle - cycle_num))
 
         start_t = time.perf_counter()
         try:
-            result = call_predict(args.api_url, w_scaled)
+            result = call_predict(args.api_url, w, engine_id=args.unit, cycle=int(cycle_num))
         except requests.exceptions.RequestException as e:
             print(f"[simulate] Could not reach backend at {args.api_url} — is uvicorn running? ({e})")
             return
@@ -183,11 +186,10 @@ def run_snapshot(args, metadata, scaler, train_df):
         unit_df = train_df[train_df["unit"] == unit_id].sort_values("cycle")
         values = unit_df[feature_cols].values
         w = values[probe_cycle - window:probe_cycle]
-        w_scaled = scaler.transform(w)
 
         start_t = time.perf_counter()
         try:
-            result = call_predict(args.api_url, w_scaled)
+            result = call_predict(args.api_url, w, engine_id=int(unit_id), cycle=int(probe_cycle))
         except requests.exceptions.RequestException as e:
             print(f"[simulate] Could not reach backend at {args.api_url} — is uvicorn running? ({e})")
             return
